@@ -1,9 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Login.css"; // Importing external CSS
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
-    email: "", // Default email as shown in the image
+    email: "", // Default email
     password: "",
   });
 
@@ -17,9 +22,35 @@ const Login = () => {
     }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.password) {
+      alert("Please enter your email and password.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await axios.post("http://localhost:3000/api/v1/user/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+      localStorage.setItem("c_token", res.data.token )
+      alert("Login successful!");
+      navigate("/chats");
+    } catch (err) {
+      alert("Error logging in. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="login-container">
-      <form className="login-form">
+      <form className="login-form" onSubmit={handleSubmit}>
         {/* Email Input */}
         <label>Email <span>*</span></label>
         <input
@@ -28,7 +59,6 @@ const Login = () => {
           value={formData.email}
           onChange={handleChange}
           required
-          disabled // Email input is disabled as per the image
         />
 
         {/* Password Input */}
@@ -47,10 +77,11 @@ const Login = () => {
         </div>
 
         {/* Login Button */}
-        <button type="submit" className="login-btn">Login</button>
+        <button type="submit" className="login-btn" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-        {/* Guest User Button */}
-        <button type="button" className="guest-btn">Get Guest User Credentials</button>
+
       </form>
     </div>
   );
