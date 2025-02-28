@@ -1,0 +1,92 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .login-form {
+    width: 100%;
+    background: white;
+    padding: 20px;
+  }
+  
+  .login-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .login-form label span {
+    color: red;
+  }
+  
+  .login-form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f8f9fa; /* Light gray background */
+  }
+  
+  .login-form input:disabled {
+    background: #e9ecef; /* Disabled input color */
+    color: #495057;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding-right: 50px;
+  }
+  
+  .input-group button {
+    position: absolute;
+    right: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: blue;
+  }
+  
+  .login-btn {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .login-btn:hover {
+    background: #0056b3;
+  }
+  
+  .guest-btn {
+    width: 100%;
+    padding: 10px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .guest-btn:hover {
+    background: #c82333;
+  }
+  

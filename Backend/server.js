@@ -4,7 +4,14 @@ const config = require("./src/config/config")
 
 
 
-
 app.listen(config.PORT, ()=>{
     console.log(`Server is running`)
 })
+
+
+//connect to db
+const connectDB = require("./src/db/db")()
+
+
+
+
