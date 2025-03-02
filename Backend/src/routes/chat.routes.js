@@ -5,11 +5,16 @@ const userMiddleware = require("../middleware/user.middleware")
 // Define your routes here
 
 router.post('/', userMiddleware.authUser, chatControllers.accessChats);
-// router.get('/'  ,chatControllers.fetchChats )
-// router.post("/group" ,userMiddleware.authUser,chatControllers.createGroup )
-// router.put("/rename" ,userMiddleware.authUser,chatControllers.renameGroup )
-// router.put("/groupremove" ,userMiddleware.authUser,chatControllers.removeFromGroup )
-// router.put("/groupadd" ,userMiddleware.authUser,chatControllers.addToGroup )
+//fetching all chats for the Particuler User
+router.get('/', userMiddleware.authUser, chatControllers.fetchChats)
+//Creating a Group Chat
+router.post("/group" ,userMiddleware.authUser,chatControllers.createGroup )
+//renaming a Specific Group Chat 
+router.put("/rename" ,userMiddleware.authUser,chatControllers.renameGroup )
+//add a user to a specific Froup Chat 
+router.put("/groupadd" ,userMiddleware.authUser,chatControllers.addToGroup )
+// delete a user to a specific Froup Chat
+router.put("/groupremove" ,userMiddleware.authUser,chatControllers.removeFromGroup )
 
 
 
