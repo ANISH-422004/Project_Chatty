@@ -31,6 +31,15 @@ userSchema.methods.generateAuthToken = function () {
     return token;
 };
 
+// 🔹 **Static Method:** Verify JWT Token (Works on the model level)
+userSchema.statics.verifyToken = (token) => {
+    if(!token){
+        throw new Error("Token is required")
+    }
+    return jwt.verify(token, config.JWT_SECRET);
+}
+
+
 // 🔹 **Static Method:** Hash Password (Works on the model level)
 userSchema.statics.hashPassword = async function (password) {
     if (!password) throw new Error("Password is required")
