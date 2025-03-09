@@ -50,7 +50,7 @@ module.exports.fetchChats = async (req, res) => {
         const chats = await chatModel.find({ users: { $elemMatch: { $eq: req.user._id } } })
             .populate("users", "-password")
             .populate("groupAdmin", "-password")
-            .populate("latestMessages")
+            .populate("latestMessage")
             .sort({ updatedAt: -1 })
         res.status(200).json(chats)
 

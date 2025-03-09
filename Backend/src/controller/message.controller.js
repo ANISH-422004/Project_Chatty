@@ -38,10 +38,10 @@ module.exports.sendMessageController = async (req, res) => {
 
 module.exports.allMessagesOfChat = async (req, res) => {
     try {
-        const messages = await messageModel.find({ chatId: req.params.chatId }).populate("sender","name picture email").populate("chatId")
-        if(!messages) return res.status(400).json({message : "Chat was not Found with requested ChatId "})
+        const messages = await messageModel.find({ chatId: req.params.chatId }).populate("sender", "name picture email").populate("chatId")
+        if (!messages) return res.status(400).json({ message: "Chat was not Found with requested ChatId " })
 
-        res.status(200).json({messages})    
+        res.status(200).json({ messages })
 
 
     } catch (error) {
