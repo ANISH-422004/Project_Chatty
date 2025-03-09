@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get("/", (req, res) => {
-    res.send("Server is running...");
+    res.json({message:"Server is running..."});
   });
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/chat' , chatRoutes)
