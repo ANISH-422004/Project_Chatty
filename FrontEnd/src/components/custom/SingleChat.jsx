@@ -16,7 +16,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [socketConnected, setSocketConnected] = useState(false);
   const [typingUser, setTypingUser] = useState(null);
   const typingTimeoutRef = useRef(null);
-  const { user, selectedChat } = ChatState();
+  const { user, selectedChat , notifications , setNotifications} = ChatState();
   
   const messagesEndRef = useRef(null);
 
@@ -59,9 +59,20 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     };
   }, [selectedChat]);
 
+  console.log(notifications)
   useEffect(() => {
     const handleNewMessage = (newMessage) => {
-      if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chatId._id) return;
+      if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chatId._id){
+        //noifications
+        if (!notifications.some((notif) => notif._id === newMessage._id)) {
+          setNotifications((prev) => [...prev, newMessage]);
+          setFetchAgain((prev) => !prev);
+        }
+        
+
+
+
+      } 
       setMessages((prev) => [...prev, newMessage]);
     };
 
