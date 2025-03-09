@@ -11,7 +11,7 @@ const ProfileModal = ({ user, onClose }) => {
         {/* Profile Image */}
         <div className="flex justify-center">
           <img
-            src={user.image || "https://via.placeholder.com/100"}
+            src={user.picture || "https://via.placeholder.com/100"}
             alt="Profile"
             className="w-24 h-24 rounded-full border border-gray-300 shadow-md"
           />

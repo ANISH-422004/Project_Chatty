@@ -14,12 +14,12 @@ const ChatSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
-            
+
         },
 
     ],
 
-    latestMessages: {
+    latestMessage: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message"
     },
@@ -34,6 +34,6 @@ const ChatSchema = new mongoose.Schema({
     }
 )
 
-const chatModel = mongoose.model("Chat",ChatSchema)
+const chatModel = mongoose.model("Chat", ChatSchema)
 
 module.exports = chatModel

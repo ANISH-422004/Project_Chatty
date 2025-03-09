@@ -8,6 +8,6 @@ router.post("/register",multer.handelFileUpload, userControllers.registerControl
 router.post("/login", userControllers.loginController)
 
 router.get("/search" ,userMiddleware.authUser,userControllers.searchUser)
-
+router.get("/loggedinuser" , userMiddleware.authUser  , userControllers.giveLoggedInUserDetails)
 
 module.exports=router

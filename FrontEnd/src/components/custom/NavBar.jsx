@@ -6,6 +6,7 @@ import ProfileModal from "./ProfileModel";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toaster } from "../ui/toaster";
 import { createToaster } from "@chakra-ui/react";
+import { ChatState } from "../../context/ChatProvider";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -14,11 +15,7 @@ const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
-  const user = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-    image: "https://via.placeholder.com/100",
-  };
+  const {user}  = ChatState()
 
   return (
     <div className="flex justify-between items-center p-4 bg-white shadow-md">
@@ -47,8 +44,8 @@ const NavBar = () => {
             onClick={() => setIsOpen(!isOpen)}
           >
             {/* Circular Profile */}
-            <div className="w-8 h-8 flex items-center justify-center bg-white text-black font-bold rounded-full">
-              GU
+            <div className="w-8 h-8 flex overflow-hidden items-center justify-center bg-white text-black font-bold rounded-full">
+              <img src={user.picture} alt="" />
             </div>
 
             {/* Dropdown Icon */}

@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Container, Tabs, Text } from "@chakra-ui/react";
 import Login from "../../Authentication/Login/Login";
 import Register from "../../Authentication/Register/Register";
-
+import { Toaster, toaster } from "../../ui/toaster"
 const Home = () => {
   return (
     <Container maxW="xl" centerContent>
@@ -44,13 +44,17 @@ const Home = () => {
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="tab-1">
-            <Login />
+            <Login toaster={toaster} />
           </Tabs.Content>
           <Tabs.Content value="tab-2">
-            <Register />
+            <Register toaster={toaster} />
           </Tabs.Content>
         </Tabs.Root>
       </Box>
+
+
+      <Toaster />
+
     </Container>
   );
 };

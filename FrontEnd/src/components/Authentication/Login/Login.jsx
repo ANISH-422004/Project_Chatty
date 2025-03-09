@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css"; // Importing external CSS
+import { Toaster, toaster } from "../../ui/toaster"
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,7 +28,10 @@ const Login = () => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      alert("Please enter your email and password.");
+      toaster.create({
+        title: `Please enter your email and password.`,
+        type: "error",
+      });
       return;
     }
 
@@ -37,12 +42,20 @@ const Login = () => {
         email: formData.email,
         password: formData.password,
       });
-      localStorage.setItem("c_token", res.data.token )
-      alert("Login successful!");
-      navigate("/chats");
+      localStorage.setItem("c_token", res.data.token);
+      toaster.create({
+        title: "Login successful!",
+        type: "success",
+      });
+      setTimeout(() => {
+        navigate("/chats");
+      }, 1000);
     } catch (err) {
-      alert("Error logging in. Please try again.");
-      console.error(err);
+      toaster.create({
+        title: "Email or Password is Wrong",
+        type: "error",
+      });
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -52,7 +65,9 @@ const Login = () => {
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         {/* Email Input */}
-        <label>Email <span>*</span></label>
+        <label>
+          Email <span>*</span>
+        </label>
         <input
           type="email"
           name="email"
@@ -62,7 +77,9 @@ const Login = () => {
         />
 
         {/* Password Input */}
-        <label>Password <span>*</span></label>
+        <label>
+          Password <span>*</span>
+        </label>
         <div className="input-group">
           <input
             type={showPassword ? "text" : "password"}
@@ -80,9 +97,9 @@ const Login = () => {
         <button type="submit" className="login-btn" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
-
-
       </form>
+
+      <Toaster/>
     </div>
   );
 };

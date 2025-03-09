@@ -15,7 +15,7 @@ module.exports.accessChats = async (req, res) => {
             users: { $all: [req.user._id, userId] } // Directly using userId
         })
             .populate("users", "-password")
-            .populate("latestMessages");
+            .populate("latestMessage");
 
         if (isChat) {
             return res.status(200).json(isChat);
@@ -178,31 +178,70 @@ module.exports.addToGroup = async (req, res) => {
 }
 
 
+
 module.exports.removeFromGroup = async (req, res) => {
     try {
         const { chatId, userId } = req.body;
+        // console.log(chatId , userId)
 
         if (!chatId || !userId) {
             return res.status(400).json({ message: "chatId and userId are required" });
         }
 
-        // Ensure we await the query properly
-        const removed = await chatModel.findOneAndUpdate(
-            { _id: chatId },
+        // Fetch group details
+        const groupChat = await chatModel.findById(chatId);
+        if (!groupChat) {
+            return res.status(404).json({ message: "Group Not Found" });
+        }
+
+        // Check if the user leaving is the admin
+        const isAdminLeaving = groupChat.groupAdmin.toString() === userId;
+
+        if (isAdminLeaving) {
+            // Get remaining users (excluding admin)
+            const remainingUsers = groupChat.users.filter(user => user.toString() !== userId);
+
+            if (remainingUsers.length === 0) {
+                // If no other users remain, delete the group
+                await chatModel.findByIdAndDelete(chatId);
+                return res.status(200).json({ message: "Group deleted as the last admin left" });
+            }
+
+            // Select a random user from the remaining users
+            const newAdmin = remainingUsers[Math.floor(Math.random() * remainingUsers.length)];
+
+            // Update group: assign new admin and remove the leaving user
+            const updatedChat = await chatModel.findByIdAndUpdate(
+                chatId,
+                { 
+                    $pull: { users: userId }, 
+                    groupAdmin: newAdmin
+                },
+                { new: true }
+            )
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password")
+            .lean(); // Convert to plain object
+
+            return res.status(200).json({
+                message: `Admin left. New admin assigned: ${newAdmin}`,
+                updatedChat
+            });
+        }
+
+        // If a normal user is leaving, just remove them
+        const updatedChat = await chatModel.findByIdAndUpdate(
+            chatId,
             { $pull: { users: userId } },
             { new: true }
         )
         .populate("users", "-password")
         .populate("groupAdmin", "-password")
-        .lean(); // Convert Mongoose document to plain object to avoid circular references
-
-        if (!removed) {
-            return res.status(404).json({ message: "Group Not Found" });
-        }
+        .lean();
 
         res.status(200).json({
             message: "User removed from Group",
-            removed
+            updatedChat
         });
 
     } catch (error) {

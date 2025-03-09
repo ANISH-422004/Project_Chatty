@@ -5,13 +5,14 @@ import axios from "axios";
 import ChatLoading from "./ChatLoading";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../context/ChatProvider";
+import { Spinner } from "@chakra-ui/react"
 // import { accessChats } from "../../../../Backend/src/controller/chat.controller";
 
 const SideDrawer = ({ onClose }) => {
   const [search, setSearch] = useState("");
   const [searchResult, setsearchResult] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [loadingChat, setLoadingChat] = useState(false);
+  const [loading, setLoading] = useState(false); // loading for all chats in chats area
+  const [loadingChat, setLoadingChat] = useState(false); // loading for a single chat
 
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
 
@@ -21,6 +22,7 @@ const SideDrawer = ({ onClose }) => {
         title: `Type Something to search an user`,
         type: "error",
       });
+      return;
     }
 
     setLoading(true);
@@ -49,35 +51,44 @@ const SideDrawer = ({ onClose }) => {
   };
 
   const accessChats = async (id) => {
-    axios
-      .post(
+    try {
+      setLoadingChat(true);
+      const res = await axios.post(
         `http://localhost:3000/api/v1/chat`,
-        {
-          userId: id,
-        },
+        { userId: id },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("c_token")}`,
           },
         }
-      )
-      .then((res) => {
-        console.log(res);
-        setSelectedChat(res.data);
-        setLoading(false);
-        toaster.create({
-            description: "Fetching Chats",
-            duration: 2000,
-          })
-          onClose()
-        })
-      .catch((err) => {
-        toaster.create({
-          title: `${err.message}`,
-          type: "error",
-        });
+      );
+  
+      if (!chats.find((c) => c._id === res.data._id)) {
+        setChats([res.data, ...chats]);
+      }
+      
+      setSelectedChat(res.data);
+  
+      // Ensure state update has completed before closing
+      setTimeout(() => {
+        onClose();
+      }, 0);
+  
+      toaster.create({
+        description: "Fetching Chats",
+        duration: 1000,
       });
+  
+      setLoadingChat(false);
+    } catch (err) {
+      console.log(err);
+      toaster.create({
+        title: `${err.message}`,
+        type: "error",
+      });
+    }
   };
+  
 
   return (
     <>
@@ -120,6 +131,7 @@ const SideDrawer = ({ onClose }) => {
                 />
               );
             })}
+            {loadingChat && <Spinner ml="auto" d="flex" />}
           </ul>
         )}
       </div>

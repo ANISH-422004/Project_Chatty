@@ -95,7 +95,7 @@ module.exports.searchUser = async (req, res) => {
                 ],
                 _id: { $ne: req.tokenData._id },
             })
-            .select("-password"); // Exclude password from response
+            .select("-password"); 
 
         console.log(req.tokenData._id);
         res.status(200).json(users);
@@ -105,3 +105,17 @@ module.exports.searchUser = async (req, res) => {
     }
 };
  
+
+
+module.exports.giveLoggedInUserDetails = async(req,res)=>{
+    try {
+            if(!req.user) return res.status(400).json({message : "Account Not Found Login Again"})
+            
+             res.status(200).json({loggedInUser : req.user})   
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message : error.message})
+    }
+}
